@@ -36,27 +36,10 @@
             </figure>
 
         {% endfor %}
-        <ul class="pagination modal-4">
-            {% if burgers.has_previous %}
-                <li><a href="?page={{ burgers.previous_page_number }}" class="prev">
-                    <i class="fa fa-chevron-left"></i>
-                    Previous
-                </a>
-                </li>
-                 <li><a href="?page={{ burgers.previous_page_number }}">
-                     {{ burgers.previous_page_number }}</a></li>
-            {% endif %}
-            <li><a href="#" class="active">{{ burgers.number }}</a></li>
+        {% include "layouts/pagination.html" with page_obj=burgers %}
 
-        {% if burgers.has_next %}
-            <li><a href="?page={{ burgers.next_page_number }}">
-                {{ burgers.next_page_number }}</a></li>
-            <li><a href="?page={{burgers.next_page_number }}" class="next">
-                Next
-                <i class="fa fa-chevron-right"></i>
-            </a></li>
-        {% endif %}
-        </ul>
+
+
         <br>
 
     </div>

@@ -1,0 +1,26 @@
+{% extends "restaurant/base_detail.html" %}
+
+
+{% block detail %}
+
+
+        {% for pizza in restaurant.pizza.all %}
+            {% if forloop.counter == 3 %}
+                <div class="w3-row-padding">
+            {% endif %}
+            <div class="w3-third w3-container w3-margin-bottom">
+                <a href = "{% url "pizza_info" pizza.pk %}">
+                <img src="{% if pizza.image %}{{ pizza.image.url }}{% endif %}" alt="Nope" style="width:100%"
+                     class="w3-hover-opacity">
+                </a>
+                <div class="w3-container w3-white">
+                  <p><b><a href = "{% url "pizza_info" pizza.pk %}">{{ pizza.pizza_name }}</a></b></p>
+                    <p>{{ pizza.description }}</p>
+                </div>
+            </div>
+        {% endfor %}
+
+        </div>
+
+
+{% endblock %}
