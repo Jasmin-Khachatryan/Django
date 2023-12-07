@@ -8,7 +8,7 @@
         {% if forloop.counter <= forloop.revcounter %}
             <section class="dark">
                 <div class="container py-4">
-                    <h1 class="h1 text-center" id="pageHeaderTitle">{{ restaurant.name }}</h1>
+                    <h1 class="h1 text-center" id="pageHeaderTitle">{{ restaurant.restaurant_name }}</h1>
 
                     <article class="postcard dark {% cycle "blue" "red" "green" "yellow" %}">
                         <a class="postcard__img_link" href="{% url "res_detail" restaurant.pk %}">
@@ -39,7 +39,7 @@
         {% else %}
             <section class="light">
                 <div class="container py-2">
-                    <div class="h1 text-center text-dark" id="pageHeaderTitle">{{ restaurant.name }}</div>
+                    <div class="h1 text-center text-dark" id="pageHeaderTitle">{{ restaurant.restaurant_name }}</div>
 
                     <article class="postcard light {% cycle "blue" "red" "green" "yellow" %}">
                         <a class="postcard__img_link" href="{% url "res_detail" restaurant.pk %}">
