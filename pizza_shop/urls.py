@@ -24,7 +24,6 @@ urlpatterns = [
     path("", include("pizza.urls")),
     path("burger/", include("burgers.urls")),
     path("restaurant/", include("restaurant.urls")),
-    path("restaurant/", include("restaurant.urls")),
 ]
 
 

@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from pizza.models import Pizza
 
@@ -14,3 +14,10 @@ def pizza(request):
 
 def about_us(request):
     return render(request, "pizza/about_us.html")
+
+
+def pizza_info(request, pk):
+    pizzas = get_object_or_404(Pizza, pk=pk)
+    return render(request, "pizza/pizza_info.html", {"pizzas": pizzas})
+
+

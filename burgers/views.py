@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from burgers.models import Burger
 
@@ -12,4 +12,7 @@ def burger(request):
     return render(request, "burger/burger.html", {"burgers": page_obj})
 
 
+def burger_info(request, pk):
+    burgers_info = get_object_or_404(Burger, pk=pk)
+    return render(request, "burger/burger_info.html", {"burgers": burgers_info})
 
