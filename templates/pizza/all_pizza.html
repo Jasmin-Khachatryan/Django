@@ -18,7 +18,7 @@
                 </div>
                 <div class="pizza__content">
                     <div class="pizza__title">
-                        <h1 class="pizza__heading">Pizza {{ pizza.pizza_name }}🥩</h1>
+                        <h1 class="pizza__heading"><a href = "{% url "pizza_info" pizza.pk %}"> {{ pizza.pizza_name }}</a>🥩</h1>
                         <div class="pizza__tag pizza__tag--1">#meat</div>
                         <div class="pizza__tag pizza__tag--2">#italian</div>
                     </div>

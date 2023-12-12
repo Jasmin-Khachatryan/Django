@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "pizza.apps.PizzaConfig",
     "burgers.apps.BurgersConfig",
     "restaurant.apps.RestaurantConfig",
+    "search.apps.SearchConfig"
 ]
 
 MIDDLEWARE = [

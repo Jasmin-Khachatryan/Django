@@ -36,6 +36,38 @@
             </div>
         </div>
     </div>
+      <caption><h1>Similiar pizzas</h1></caption>
+ <table class="table">
+
+
+
+  <thead>
+    <tr>
+
+      <th scope="col">Row</th>
+         <th scope="col">Name</th>
+          <th scope="col">Image</th>
+      <th scope="col">Price</th>
+      <th scope="col">Time</th>
+      <th scope="col">Calories</th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+  {% for sim_burger in all_burger %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+        <td>{{ sim_burger.burger_name }}</td>
+      <td><img src="{{ sim_burger.image.url }}" alt="{{ sim_burger.burger_name }} Image"></td>
+      <td>{{ sim_burger.price }}</td>
+      <td>{{sim_burger.prepare_time}}</td>
+        <td>{{ sim_burger.calories }}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
 </div>
+
 
 {% endblock %}

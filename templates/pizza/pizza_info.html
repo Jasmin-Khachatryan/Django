@@ -27,6 +27,7 @@
 
         </div>
 
+
         <div class="col-md-7">
             <img src="{% if pizzas.image %}{{ pizzas.image.url }}{% else %}
                 {% static "img/no_image.jpeg" %}
@@ -36,6 +37,39 @@
             </div>
         </div>
     </div>
+
+
+
+<table class="table">
+  <caption><h1>Similiar pizzas</h1></caption>
+
+
+  <thead>
+    <tr>
+
+      <th scope="col">Row</th>
+         <th scope="col">Name</th>
+          <th scope="col">Image</th>
+      <th scope="col">Price</th>
+      <th scope="col">Time</th>
+      <th scope="col">Calories</th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+  {% for sim_pizza in all_pizza %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+        <td>{{ sim_pizza.pizza_name }}</td>
+      <td><img src="{{ sim_pizza.image.url }}" alt="{{ sim_pizza.pizza_name }} Image"></td>
+      <td>{{ sim_pizza.price }}</td>
+      <td>{{sim_pizza.prepare_time}}</td>
+        <td>{{ sim_pizza.calories }}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
 </div>
 
 {% endblock %}

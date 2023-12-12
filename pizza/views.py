@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-
+from django.db.models import Q
 from pizza.models import Pizza
 
 
@@ -17,7 +17,19 @@ def about_us(request):
 
 
 def pizza_info(request, pk):
-    pizzas = get_object_or_404(Pizza, pk=pk)
-    return render(request, "pizza/pizza_info.html", {"pizzas": pizzas})
+    reference_pizza = get_object_or_404(Pizza, pk=pk)
 
+    price_range = 30
+    calories_range = 40
 
+    similar_pizzas = Pizza.objects.filter(
+        Q(price__range=(reference_pizza.price - price_range, reference_pizza.price + price_range)) |
+        Q(calories__range=(reference_pizza.calories - calories_range, reference_pizza.calories + calories_range))
+    ).exclude(id=pk)
+
+    context = {
+        'pizzas': reference_pizza,
+        'all_pizza': similar_pizzas,
+    }
+
+    return render(request, 'pizza/pizza_info.html', context)

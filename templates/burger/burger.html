@@ -19,7 +19,7 @@
                 </div>
                 <div class="burger__content">
                     <div class="burger__title">
-                        <h1 class="burger__heading"> {{ burger.burger_name }}🍔</h1>
+                        <h1 class="burger__heading"> <a href = "{% url "burger_info" burger.pk %}"> {{ burger.burger_name }}</a>🍔</h1>
                         <div class="burger__tag burger__tag--1">#burger</div>
                         <div class="burger__tag burger__tag--2">#testy</div>
                     </div>
