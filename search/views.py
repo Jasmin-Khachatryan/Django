@@ -4,6 +4,7 @@ from burgers.models import Burger
 from django.shortcuts import render
 from django.db.models import Q
 
+
 def advanced_search(request):
     form = SearchForm()
     result_product = []
@@ -16,11 +17,16 @@ def advanced_search(request):
             product_table = Pizza
             name_search = Q(pizza_name__icontains=name)
         if form.is_valid():
-            result_product = product_table.objects.filter(
-                name_search | (Q(
-                    rate__lte=form.cleaned_data.get("rate_until") or 0
-                ) & Q(rate__gte=form.cleaned_data.get("rate_from" or 0)))
-                | Q(calories__lte=form.cleaned_data.get("calories_until") or 0)
-            )
-    return render(request, "search/search.html", {"form": form, "result_product": result_product})
+            filters = [name_search]
+            rate_until = form.cleaned_data.get("rate_until")
+            rate_from = form.cleaned_data.get("rate_from")
+            calories_until = form.cleaned_data.get("calories_until")
+            if rate_from is not "0":
+                filters.append(Q(rate__gte=rate_from))
+            if rate_until is not "0":
+                filters.append(Q(rate__lte=rate_until))
+            if calories_until is not None:
+                filters.append(Q(calories__lte=calories_until))
+            result_product = product_table.objects.filter(*filters)
 
+    return render(request, "search/search.html", {"form": form, "result_product": result_product})

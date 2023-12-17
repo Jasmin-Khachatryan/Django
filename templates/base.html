@@ -18,9 +18,9 @@
     <li class="navbar-item">Restaurants<span class="navbar-item_label"><a href = "{% url "restaurant"%}">Restaurant</a></span></li>
     <li class="navbar-item">Category<span class="navbar-item_label">Category</span>
         <ul class="navbar-container_sub">
-            <li class="navbar-item_sub">Service 1</li>
-            <li class="navbar-item_sub">Service 2</li>
-            <li class="navbar-item_sub">Service 3</li>
+            <li class="navbar-item_sub"><a href="{% url "add_pizza" %}">Add Pizza</a></li>
+            <li class="navbar-item_sub"><a href="{% url "add_burger" %}">Add Burger</a></li>
+            <li class="navbar-item_sub"></li>
         </ul>
     </li>
     <li class="navbar-item">Products<span class="navbar-item_label">Products</span>
@@ -38,7 +38,7 @@
 
 
 
-
+ {% include "layouts/alert.html" %}
 {% block content %}
 
 {% endblock %}

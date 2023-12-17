@@ -1,7 +1,9 @@
+from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from pizza.models import Pizza
+from pizza.forms import PizzaForm
 
 
 def pizza(request):
@@ -33,3 +35,42 @@ def pizza_info(request, pk):
     }
 
     return render(request, 'pizza/pizza_info.html', context)
+
+
+def add_pizza(request):
+    form = PizzaForm()
+
+    if request.method == "POST":
+        form = PizzaForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(commit=True)
+
+            return redirect("pizzas")
+
+    return render(request, "pizza/add_pizza.html", {"form": form})
+
+
+def update_pizza(request, pk: int):
+    pizza = get_object_or_404(Pizza, pk=pk)
+    form = PizzaForm(instance=pizza)
+    if request.method == "POST":
+        form = PizzaForm(request.POST, request.FILES, instance=pizza)
+        if form.is_valid():
+            pizza_upd = form.save()
+            messages.info(request, "Pizza was updated successfully!")
+
+            return redirect(pizza_upd)
+    return render(request, "pizza/update_pizza.html", {"form": form})
+
+def delete_pizza(request, pk: int):
+    pizza = get_object_or_404(Pizza, pk=pk)
+    if request.method == "POST":
+        pizza.delete()
+        messages.error(request, "pizza was deleted successfully!")
+        return redirect("pizzas")
+    return render(request, "pizza/delete_pizza.html")
+
+
+
+
+

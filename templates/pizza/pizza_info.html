@@ -24,6 +24,22 @@
                 <p class="mb-0"><b>restaurant:</b> {{pizzas.restaurant}}</p>
             </div>
 
+            <div class="btn btn-info">
+                <a href="{% url "update_pizza" pizzas.pk %}">
+                    <span class="navbar-item_sub">Update Pizza</span>
+                 </a>
+                </div>
+                 <div class="btn btn-danger">
+                <a href="{% url "delete_pizza" pizzas.pk %}">
+                    <span class="navbar-item_sub">Delete Pizza</span>
+                 </a>
+                     </div>
+
+
+
+
+
+
 
         </div>
 

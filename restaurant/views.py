@@ -4,7 +4,7 @@ from restaurant.models import Restaurant
 
 
 def restaurant(request):
-    restaurants = Restaurant.objects.all().order_by("pk")
+    restaurants = Restaurant.objects.all().prefetch_related("pizza", "burger").order_by("pk")
     paginator = Paginator(restaurants, 4)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
