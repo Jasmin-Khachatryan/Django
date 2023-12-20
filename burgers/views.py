@@ -59,9 +59,9 @@ def update_burger(request, pk: int):
 
 
 def delete_burger(request, pk: int):
-    burger = get_object_or_404( Burger, pk=pk)
+    burger = get_object_or_404(Burger, pk=pk)
     if request.method == "POST":
         burger.delete()
         messages.error(request, "Burger was deleted successfully!")
         return redirect("burgers")
-    return render(request, "burger/delete_burger.html")
+    return render(request, "burger/burger_delete.html", {"burger": burger})

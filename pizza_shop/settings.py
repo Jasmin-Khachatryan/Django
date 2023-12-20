@@ -36,12 +36,14 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    'debug_toolbar',
+    "debug_toolbar",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "django.contrib.staticfiles",
     "pizza.apps.PizzaConfig",
     "burgers.apps.BurgersConfig",
     "restaurant.apps.RestaurantConfig",
-    "search.apps.SearchConfig"
+    "search.apps.SearchConfig",
 ]
 
 MIDDLEWARE = [
@@ -146,3 +148,7 @@ MESSAGE_TAGS = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

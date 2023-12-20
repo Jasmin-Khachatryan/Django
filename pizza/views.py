@@ -62,13 +62,15 @@ def update_pizza(request, pk: int):
             return redirect(pizza_upd)
     return render(request, "pizza/update_pizza.html", {"form": form})
 
+
 def delete_pizza(request, pk: int):
+
     pizza = get_object_or_404(Pizza, pk=pk)
     if request.method == "POST":
         pizza.delete()
         messages.error(request, "pizza was deleted successfully!")
         return redirect("pizzas")
-    return render(request, "pizza/delete_pizza.html")
+    return render(request, "pizza/delete_pizza.html", {"pizza": pizza})
 
 
 

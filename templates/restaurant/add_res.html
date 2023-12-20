@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+<div class="container">
+   <h2>Create Restaurant</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+
+        {% for form in formset_pizza.forms %}
+        <h3>Pizza</h3>
+        {{ formset_pizza.management_form }}
+
+                {{ form.as_p }}
+
+        {% endfor %}
+
+
+         {% for form in formset_burger.forms %}
+        <h3>Burger</h3>
+        {{ formset_burger.management_form }}
+
+
+                {{ form.as_p }}
+
+
+        {% endfor %}
+
+        <input type="submit" value="Save">
+
+        </div>
+
+
+{% endblock %}
