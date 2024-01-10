@@ -7,3 +7,9 @@ def upload_burger_image(instance, filename):
 
 def upload_restaurant_image(instance, filename):
     return f"restaurant/{instance.restaurant_name}/{filename}"
+
+
+def upload_user_images(instance, filename):
+    return f"users/{instance.user.username}/{filename}"
+
+
