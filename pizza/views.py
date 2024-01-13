@@ -1,77 +1,94 @@
+from helpers.decorators import own_restaurant_product
 from django.contrib import messages
-from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from pizza.models import Pizza
 from pizza.forms import PizzaForm
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
-def pizza(request):
-    pizzas = Pizza.objects.all()
-    paginator = Paginator(pizzas, 2)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, "pizza/all_pizza.html", {"pizzas": page_obj})
+class PizzaListView(ListView):
+    model = Pizza
+    template_name = "pizza/all_pizza.html"
+    context_object_name = "pizzas"
+    paginate_by = 2
 
 
-def about_us(request):
-    return render(request, "pizza/about_us.html")
+
+class AboutUsView(TemplateView):
+    template_name = "pizza/about_us.html"
 
 
-def pizza_info(request, pk):
-    reference_pizza = get_object_or_404(Pizza, pk=pk)
-
+class PizzaDetailView(DetailView):
+    template_name = "pizza/pizza_info.html"
     price_range = 30
     calories_range = 40
 
-    similar_pizzas = Pizza.objects.filter(
-        Q(price__range=(reference_pizza.price - price_range, reference_pizza.price + price_range)) |
-        Q(calories__range=(reference_pizza.calories - calories_range, reference_pizza.calories + calories_range))
-    ).exclude(id=pk)
+    def get(self, request, pk):
+        reference_pizza = get_object_or_404(Pizza, pk=pk)
 
-    context = {
-        'pizzas': reference_pizza,
-        'all_pizza': similar_pizzas,
-    }
+        similar_pizzas = Pizza.objects.filter(
+            Q(price__range=(reference_pizza.price - self.price_range, reference_pizza.price + self.price_range)) |
+            Q(calories__range=(
+            reference_pizza.calories - self.calories_range, reference_pizza.calories + self.calories_range))
+        ).exclude(id=pk)
 
-    return render(request, 'pizza/pizza_info.html', context)
+        context = {
 
+            "pizzas": reference_pizza,
+            "all_pizza": similar_pizzas,
+        }
 
-def add_pizza(request):
-    form = PizzaForm()
-
-    if request.method == "POST":
-        form = PizzaForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(commit=True)
-
-            return redirect("pizzas")
-
-    return render(request, "pizza/add_pizza.html", {"form": form})
+        return render(request, self.template_name, context)
 
 
-def update_pizza(request, pk: int):
-    pizza = get_object_or_404(Pizza, pk=pk)
-    form = PizzaForm(instance=pizza)
-    if request.method == "POST":
-        form = PizzaForm(request.POST, request.FILES, instance=pizza)
-        if form.is_valid():
-            pizza_upd = form.save()
-            messages.info(request, "Pizza was updated successfully!")
+class PizzaCreateView(CreateView):
+    form_class = PizzaForm
+    template_name = "pizza/add_pizza.html"
+    context_object_name = "form"
+    success_url = reverse_lazy("pizzas")
 
-            return redirect(pizza_upd)
-    return render(request, "pizza/update_pizza.html", {"form": form})
+    def form_valid(self, form):
+
+        form.save(commit=True)
+        messages.success(self.request, "Pizza was created successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("pizzas")
 
 
-def delete_pizza(request, pk: int):
+class UpdatePizzaView(UpdateView):
+    model = Pizza
+    form_class = PizzaForm
+    template_name = "pizza/update_pizza.html"
+    context_object_name = "form"
+    pk_url_kwarg = "pk"
 
-    pizza = get_object_or_404(Pizza, pk=pk)
-    if request.method == "POST":
-        pizza.delete()
+    def form_valid(self, form):
+        form.save(commit=True)
+        messages.info(self.request, "Pizza was updated successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("pizza_info", kwargs={"pk": self.object.pk})
+
+    def get_queryset(self):
+        return Pizza.objects.all()
+
+
+class DeletePizzaView(DeleteView):
+    model = Pizza
+    template_name = "pizza/delete_pizza.html"
+    context_object_name = "pizza"
+    success_url = reverse_lazy("pizzas")
+    pk_url_kwarg = "pk"
+
+    def delete(self, request, *args, **kwargs):
         messages.error(request, "pizza was deleted successfully!")
-        return redirect("pizzas")
-    return render(request, "pizza/delete_pizza.html", {"pizza": pizza})
-
+        return super().delete(request, *args, **kwargs)
 
 
 

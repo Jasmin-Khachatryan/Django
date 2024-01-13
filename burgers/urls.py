@@ -1,10 +1,12 @@
 from django.urls import path
-from burgers.views import burger, add_burger, update_burger, delete_burger
+from burgers.views import BurgerListView, CreateBurgerView, UpdateBurgerView, DeleteBurgerView, BurgerDetailView
 
 urlpatterns = [
-    path("", burger, name="burgers"),
-    path("add-burger/", add_burger, name="add_burger"),
-    path("update-burger/<int:pk>/,", update_burger, name="update_burger"),
-    path("delete-burger/<int:pk>/", delete_burger, name="delete_burger")
+    path("", BurgerListView.as_view(), name="burgers"),
+    path("add-burger/", CreateBurgerView.as_view(), name="add_burger"),
+    path("update-burger/<int:pk>/,", UpdateBurgerView.as_view(), name="update_burger"),
+    path("delete-burger/<int:pk>/", DeleteBurgerView.as_view(), name="delete_burger"),
+    path("<int:pk>/burger/info/", BurgerDetailView.as_view(), name="burger_info"),
+
 
 ]

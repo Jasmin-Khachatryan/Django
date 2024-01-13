@@ -1,7 +1,7 @@
 from django.urls import path
-from search.views import advanced_search
+from search.views import AdvancedSearchView
 
 urlpatterns = [
 
-    path("", advanced_search, name="search"),
+    path("", AdvancedSearchView.as_view(), name="search"),
 ]

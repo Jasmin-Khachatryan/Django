@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 from helpers.choices import UserTypeChoice
 from helpers.media_upload import upload_user_images
 from django.dispatch import receiver

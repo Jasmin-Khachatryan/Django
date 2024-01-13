@@ -7,6 +7,7 @@ from restaurant.models import Restaurant
 class PizzaForm(forms.ModelForm):
     restaurant = forms.ModelChoiceField(queryset=Restaurant.objects.all())
 
+
     class Meta:
 
         widgets ={

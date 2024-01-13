@@ -1,7 +1,6 @@
 from django.db import models
 from restaurant.models import Restaurant
 from django.urls import reverse
-
 from helpers.media_upload import upload_pizza_image
 
 

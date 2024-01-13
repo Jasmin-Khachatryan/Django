@@ -1,67 +1,84 @@
-from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
+from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
 from burgers.models import Burger
 from burgers.forms import BurgerForm
 from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 
-def burger(request):
-    burgers = Burger.objects.all()
-    paginator = Paginator(burgers, 2)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, "burger/burger.html", {"burgers": page_obj})
+class BurgerListView(ListView):
+    model = Burger
+    paginate_by = 2
+    template_name = "burger/burger.html"
+    context_object_name = "burgers"
 
 
-def burger_info(request, pk):
-    reference_burger = get_object_or_404(Burger, pk=pk)
-
+class BurgerDetailView(DetailView):
+    template_name = "burger/burger_info.html"
     price_range = 30
     calories_range = 40
 
-    similar_burgers = Burger.objects.filter(
-        Q(price__range=(reference_burger.price - price_range, reference_burger.price + price_range)) |
-        Q(calories__range=(reference_burger.calories - calories_range, reference_burger.calories + calories_range))
-    ).exclude(id=pk)
+    def get(self, request, pk):
+        reference_burger = get_object_or_404(Burger, pk=pk)
+        similar_burgers = Burger.objects.filter(
+            Q(price__range=(reference_burger.price - self.price_range, reference_burger.price + self.price_range)) |
+            Q(calories__range=(reference_burger.calories - self.calories_range, reference_burger.calories +
+                               self.calories_range))
+        ).exclude(id=pk)
 
-    context = {
-        'burgers': reference_burger,
-        'all_burger': similar_burgers,
-    }
+        context = {
+            "burgers": reference_burger,
+            "all_burger": similar_burgers,
+        }
 
-    return render(request, 'burger/burger_info.html', context)
-
-def add_burger(request):
-    form = BurgerForm()
-
-    if request.method == "POST":
-        form = BurgerForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect("burgers")
+        return render(request, self.template_name, context)
 
 
-    return render(request, "burger/add_burger.html", {"form": form})
+class CreateBurgerView(CreateView):
+    form_class = BurgerForm
+    template_name = "burger/add_burger.html"
+    context_object_name = "form"
+    success_url = reverse_lazy("burgers")
+
+    def form_valid(self, form):
+        form.save(commit=True)
+        messages.success(self.request, "Burger was created successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("burgers")
 
 
-def update_burger(request, pk: int):
-    burger = get_object_or_404(Burger, pk=pk)
-    form = BurgerForm(instance=burger)
-    if request.method == "POST":
-        form = BurgerForm(request.POST, request.FILES, instance=burger)
-        if form.is_valid():
-            burger_upd = form.save()
-            messages.info(request, "Burger was updated successfully!")
+class UpdateBurgerView(UpdateView):
+    model = Burger
+    form_class = BurgerForm
+    template_name = "burger/burger_update.html"
+    context_object_name = "form"
+    pk_url_kwarg = "pk"
 
-            return redirect(burger_upd)
-    return render(request, "burger/burger_update.html", {"form": form})
+    def form_valid(self, form):
+        form.save()
+        messages.info(self.request, "Burger was updated successfully!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("burger_info", kwargs={"pk": self.object.pk})
+
+    def get_queryset(self):
+        return Burger.objects.all()
 
 
-def delete_burger(request, pk: int):
-    burger = get_object_or_404(Burger, pk=pk)
-    if request.method == "POST":
-        burger.delete()
+class DeleteBurgerView(DeleteView):
+    model = Burger
+    success_url = reverse_lazy("burgers")
+    pk_url_kwarg = "pk"
+    template_name = "burger/burger_delete.html"
+    context_object_name = "burger"
+
+    def delete(self, request, *args, **kwargs):
         messages.error(request, "Burger was deleted successfully!")
-        return redirect("burgers")
-    return render(request, "burger/burger_delete.html", {"burger": burger})
+        return super().delete(request, *args, **kwargs)
+
+
+

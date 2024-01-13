@@ -24,7 +24,9 @@
                 <p class="mb-0"><b>restaurant:</b> {{pizzas.restaurant}}</p>
             </div>
 
+
             <div class="btn btn-info">
+
                 <a href="{% url "update_pizza" pizzas.pk %}">
                     <span class="navbar-item_sub">Update Pizza</span>
                  </a>
@@ -34,15 +36,7 @@
                     <span class="navbar-item_sub">Delete Pizza</span>
                  </a>
                      </div>
-
-
-
-
-
-
-
         </div>
-
 
         <div class="col-md-7">
             <img src="{% if pizzas.image %}{{ pizzas.image.url }}{% else %}
